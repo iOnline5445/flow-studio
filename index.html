@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Flow Team Studio — ศูนย์กลางผลิตสื่อ AI & คิวตรวจอนุมัติ</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- FontAwesome 6 CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-nav">
+    <div class="brand-section">
+      <div class="brand-logo-badge">
+        <i class="fa-solid fa-wand-magic-sparkles" style="color: #FFFFFF;"></i>
+      </div>
+      <div>
+        <div class="brand-title">
+          Google Flow Studio <span class="brand-tag">Team Hub</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center Navigation Tabs -->
+    <nav class="nav-center">
+      <button class="nav-tab-btn active" data-tab="dashboard">
+        <i class="fa-solid fa-chart-pie"></i> ภาพรวมสตูดิโอ
+      </button>
+      <button class="nav-tab-btn" data-tab="storyboards">
+        <i class="fa-solid fa-film"></i> สตอรี่บอร์ด (Veo & Script)
+      </button>
+      <button class="nav-tab-btn" data-tab="review">
+        <i class="fa-solid fa-clipboard-check"></i> คิวตรวจอนุมัติ (คุณบอส)
+      </button>
+      <button class="nav-tab-btn" data-tab="prompts">
+        <i class="fa-solid fa-sliders"></i> คลังพร้อมท์ (Flow/Veo)
+      </button>
+      <button class="nav-tab-btn" data-tab="assets">
+        <i class="fa-solid fa-folder-open"></i> คลังสื่อ Asset
+      </button>
+    </nav>
+
+    <!-- Right Side: User Role Switcher -->
+    <div class="user-selector-bar">
+      <div class="role-switch-container">
+        <span class="role-switch-label"><i class="fa-solid fa-user-gear"></i> สลับผู้ใช้งาน:</span>
+        <select id="userSwitcherSelect" class="user-dropdown">
+          <option value="admin">คุณกรองเกียรติ (ผม / Admin)</option>
+          <option value="boss">คุณบอส (Manager / Approver)</option>
+          <option value="lean">คุณลีน (Nutrition Strategist)</option>
+          <option value="kae">คุณเก๋ (Creative Host Persona)</option>
+          <option value="cod">คุณคอด (Lead Dev & AI Engineer)</option>
+        </select>
+      </div>
+
+      <div class="current-user-pill">
+        <span id="currentUserAvatar" class="current-user-avatar">👑</span>
+        <span id="currentUserName" class="current-user-name">คุณกรองเกียรติ (ผม)</span>
+        <span id="currentUserBadge" class="current-user-badge badge-admin">Admin</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+
+    <!-- Active User & Role Duty Banner -->
+    <section class="role-duty-banner">
+      <div class="role-duty-content">
+        <div id="dutyIcon" class="role-duty-icon">👑</div>
+        <div>
+          <div id="dutyTitle" class="role-duty-title">คุณกรองเกียรติ — Admin & Executive Producer</div>
+          <div id="dutyDesc" class="role-duty-desc">ผู้ดูแลระบบและควบคุมการผลิตทั้งหมด กำกับภาพรวม เชื่อมโยงทีมงานทุกฝ่าย</div>
+        </div>
+      </div>
+      <div id="dutyPerms" class="role-permissions-tags">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- SECTION 1: DASHBOARD OVERVIEW -->
+    <section id="section-dashboard" class="content-section active">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title"><i class="fa-solid fa-gauge-high" style="color: #6366F1;"></i> แดชบอร์ดภาพรวมการผลิตสื่อ AI</h2>
+          <div class="section-sub">ติดตามสถานะการสร้างสรรค์วิดีโอ คลังสำรองคลิป และการอนุมัติสำหรับทีม 5 ท่าน</div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <a href="https://labs.google/flow" target="_blank" rel="noopener noreferrer" class="btn btn-emerald">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> เข้าสู่ Google Flow Studio
+          </a>
+          <button class="btn btn-primary" onclick="app.openNewProjectModal()">
+            <i class="fa-solid fa-plus"></i> สร้าง Storyboard ใหม่
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick Stats Metrics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-label">โครงการทั้งหมด</div>
+            <div id="statTotalProjects" class="stat-info-value">0</div>
+            <div class="stat-info-sub">Storyboard ในระบบ</div>
+          </div>
+          <div class="stat-icon-wrap icon-purple">
+            <i class="fa-solid fa-folder-closed"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-label">รอตรวจอนุมัติ (Pending)</div>
+            <div id="statPendingReview" class="stat-info-value" style="color: #FBBF24;">0</div>
+            <div class="stat-info-sub">ส่งให้คุณบอสตรวจสอบ</div>
+          </div>
+          <div class="stat-icon-wrap icon-amber">
+            <i class="fa-solid fa-hourglass-half"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-label">อนุมัติแล้ว (Approved)</div>
+            <div id="statApproved" class="stat-info-value" style="color: #34D399;">0</div>
+            <div class="stat-info-sub">พร้อมโพสต์ / เรนเดอร์เสร็จ</div>
+          </div>
+          <div class="stat-icon-wrap icon-emerald">
+            <i class="fa-solid fa-circle-check"></i>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div>
+            <div class="stat-info-label">คลังไฟล์สื่อ (Assets)</div>
+            <div id="statAssets" class="stat-info-value">0</div>
+            <div class="stat-info-sub">วิดีโอ Veo, ภาพ, เสียง TTS</div>
+          </div>
+          <div class="stat-icon-wrap icon-rose">
+            <i class="fa-solid fa-photo-film"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review Buffer Progress (Rule: 5-7 clips stock) -->
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px; margin-bottom: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <div style="font-weight: 600; font-size: 13px; color: #FFFFFF;">
+            <i class="fa-solid fa-boxes-stacked" style="color: #10B981; margin-right: 6px;"></i> คลังสะสมคลิปรอตรวจ (Review Buffer Target: 5-7 คลิป)
+          </div>
+          <div id="bufferStatusText" style="font-size: 11.5px; color: var(--text-muted);">
+            กำลังประมวลผล...
+          </div>
+        </div>
+        <div style="background: var(--bg-card-sub); height: 8px; border-radius: 999px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05);">
+          <div id="bufferProgressBar" style="background: linear-gradient(90deg, #10B981, #34D399); height: 100%; width: 40%; transition: width 0.3s ease;"></div>
+        </div>
+      </div>
+
+      <!-- Team Collaboration & Roles Reference -->
+      <div style="background: var(--bg-card-sub); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; margin-bottom: 22px;">
+        <h3 style="font-size: 13.5px; font-weight: 700; color: #FFFFFF; margin-bottom: 12px;">
+          <i class="fa-solid fa-users" style="color: #818CF8; margin-right: 6px;"></i> แผนผังความรับผิดชอบทีมงาน 5 ท่านบนระบบ Google Flow
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 18px;">👑</span>
+              <span style="font-weight: 700; color: #818CF8;">คุณกรองเกียรติ (ผม)</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Admin & Executive Producer ควบคุมระบบ ดูภาพรวมการผลิตทุกขั้น</div>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 18px;">💼</span>
+              <span style="font-weight: 700; color: #34D399;">คุณบอส</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Executive Approver ตรวจคิวงาน อนุมัติสคริปต์/คลิปก่อนโพสต์จริง</div>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 18px;">🥗</span>
+              <span style="font-weight: 700; color: #6EE7B7;">คุณลีน</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Nutrition Strategist วางธีมโภชนาการ leanbybenz คุมเกณฑ์ อย./ห้ามเคลมเกินจริง</div>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 18px;">🎙️</span>
+              <span style="font-weight: 700; color: #F472B6;">คุณเก๋</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Creative Director & Host วาง Storyboard บทพากย์เสียงคุณเก๋ นุ่มนวล อบอุ่น</div>
+          </div>
+
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+              <span style="font-size: 18px;">💻</span>
+              <span style="font-weight: 700; color: #38BDF8;">คุณคอด</span>
+            </div>
+            <div style="font-size: 11px; color: var(--text-muted);">Lead Dev & AI Engineer ปรับแต่ง Google Veo/Imagen Prompt และ Automation</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Projects List -->
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h3 style="font-size: 14px; font-weight: 700; color: #FFFFFF;">
+            <i class="fa-solid fa-clock-rotate-left" style="color: var(--text-muted); margin-right: 6px;"></i> ความคืบหน้าล่าสุด
+          </h3>
+          <button class="btn btn-outline btn-sm" onclick="app.switchTab('storyboards')">ดูทั้งหมด</button>
+        </div>
+        <div id="dashboardRecentList">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION 2: STORYBOARDS & SCENE BUILDER -->
+    <section id="section-storyboards" class="content-section">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title"><i class="fa-solid fa-film" style="color: #EC4899;"></i> สตอรี่บอร์ดและการสร้างฉาก (Google Flow & Veo)</h2>
+          <div class="section-sub">เขียนสคริปต์ ออกแบบ Prompt สำหรับ Veo และจัดสรรเสียงพากย์คุณเก๋ทีละฉาก</div>
+        </div>
+        <button class="btn btn-primary" onclick="app.openNewProjectModal()">
+          <i class="fa-solid fa-plus"></i> เพิ่ม Storyboard ใหม่
+        </button>
+      </div>
+
+      <div id="storyboardProjectsList">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- SECTION 3: REVIEW & APPROVAL QUEUE (คุณบอส & ทีม) -->
+    <section id="section-review" class="content-section">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title"><i class="fa-solid fa-clipboard-check" style="color: #10B981;"></i> ระบบคิวตรวจอนุมัติ (Review & Approval Gatekeeper)</h2>
+          <div class="section-sub">พื้นที่สำหรับคุณบอสและผู้จัดการในการตรวจสอบความถูกต้อง อนุมัติ หรือแจ้งขอแก้ไข</div>
+        </div>
+        
+        <!-- Search Input with Strict UI Standards -->
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="reviewSearchInput" class="search-input-field" placeholder="ค้นหารหัส หรือชื่อโครงการ...">
+        </div>
+      </div>
+
+      <!-- Zero Horizontal Scroll Table with Sticky Thead -->
+      <div class="table-wrap table-responsive">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th style="width: 85px;">รหัส</th>
+              <th>ชื่อโครงการ & รายละเอียด</th>
+              <th style="width: 130px;">ผู้สร้าง</th>
+              <th style="width: 100px;">วันที่/เวลา</th>
+              <th style="width: 110px;">สถานะ</th>
+              <th class="col-hide-md" style="width: 130px;">Compliance</th>
+              <th style="width: 160px; text-align: right;">การจัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="reviewTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION 4: PROMPT ENGINEERING PRESETS -->
+    <section id="section-prompts" class="content-section">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title"><i class="fa-solid fa-sliders" style="color: #0284C7;"></i> คลังพร้อมท์มาตรฐาน (Google Flow / Veo / Imagen)</h2>
+          <div class="section-sub">ปรับแต่งโดยคุณคอด เพื่อให้ผลลัพธ์วิดีโอและรูปภาพมีความคมชัดและสไตล์สอดคล้องกันทั้งช่อง</div>
+        </div>
+
+        <!-- Search Input with Strict UI Standards -->
+        <div class="search-input-wrapper">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="promptSearchInput" class="search-input-field" placeholder="ค้นหาหมวดหมู่ หรือคีย์เวิร์ด...">
+        </div>
+      </div>
+
+      <div id="promptPresetsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px;">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- SECTION 5: ASSET REPOSITORY -->
+    <section id="section-assets" class="content-section">
+      <div class="section-header-row">
+        <div>
+          <h2 class="section-title"><i class="fa-solid fa-folder-open" style="color: #F59E0B;"></i> คลังไฟล์สื่อ Asset และประวัติเรนเดอร์</h2>
+          <div class="section-sub">รวบรวมไฟล์วิดีโอจาก Google Veo, ภาพนิ่งจาก Imagen และเสียงพากย์คุณเก๋</div>
+        </div>
+      </div>
+
+      <!-- Zero Horizontal Scroll Table with Sticky Thead -->
+      <div class="table-wrap table-responsive">
+        <table class="table-custom">
+          <thead>
+            <tr>
+              <th>ชื่อไฟล์</th>
+              <th style="width: 100px;">ประเภท</th>
+              <th style="width: 130px;">ขนาด / ความละเอียด</th>
+              <th style="width: 90px;">ความยาว</th>
+              <th style="width: 90px;">ขนาดไฟล์</th>
+              <th style="width: 160px;">แหล่งที่มา (AI Model)</th>
+              <th style="width: 100px;">สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="assetsTableBody">
+            <!-- Rendered dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal: สร้าง Storyboard ใหม่ -->
+  <div id="projectModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div style="font-weight: 700; font-size: 14px; color: #FFFFFF;">
+          <i class="fa-solid fa-plus-circle" style="color: #6366F1; margin-right: 6px;"></i> สร้าง Storyboard โครงการใหม่
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="app.closeModal('projectModal')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">ชื่อคลิป / หัวข้อเรื่อง</label>
+          <input type="text" id="newProjTitle" class="form-input" placeholder="เช่น 3 อาหารโปรตีนสูงช่วยเร่งเผาผลาญยามเช้า">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">รูปแบบวิดีโอเป้าหมาย</label>
+          <select id="newProjFormat" class="form-select">
+            <option value="9:16 Vertical Video (TikTok / Reels / Shorts)">9:16 แนวตั้ง (TikTok / Shorts / Reels)</option>
+            <option value="16:9 Landscape Video (YouTube Main)">16:9 แนวนอน (YouTube Main)</option>
+            <option value="1:1 Square (Instagram Post / Lemon8)">1:1 จัตุรัส (Instagram / Lemon8)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Google Veo Prompt (Visual Scene 1 - Hook)</label>
+          <textarea id="newProjPrompt1" class="form-textarea" rows="3" placeholder="ระบุ Prompt ภาษาอังกฤษสำหรับส่งให้ Google Veo เช่น Cinematic 4K macro shot..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Voiceover Script (บทพากย์เสียงคุณเก๋ Scene 1)</label>
+          <textarea id="newProjScript1" class="form-textarea" rows="2" placeholder="บทพูดภาษาไทย น้ำเสียงอบอุ่น ชัดถ้อยชัดคำ (ลีน บาย เบนซ์)"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="app.closeModal('projectModal')">ยกเลิก</button>
+        <button class="btn btn-primary" onclick="app.saveNewProjectFromModal()">บันทึกและส่งเข้าคิวตรวจ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotice" class="toast-notice">
+    <!-- Message injected dynamically -->
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/initial-data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
