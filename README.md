@@ -30,5 +30,6 @@
 ## 🌐 การเข้าใช้งานผ่าน Browser
 
 เปิดเบราว์เซอร์แล้วเข้าไปที่ URL ด้านล่างนี้:
-- **ผ่านเว็บเซิร์ฟเวอร์ Laragon:** [http://localhost/flow-studio](http://localhost/flow-studio)
-- **หรือเปิดไฟล์โดยตรง:** `file:///c:/laragon/www/flow-studio/index.html`
+- **🌟 ลิงก์ Cloud ออนไลน์ 24 ชม. (ปิดคอมของคุณได้เลย):** [https://ionline5445.github.io/flow-studio/](https://ionline5445.github.io/flow-studio/)
+- **หรือผ่านเครื่อง Local (Laragon):** [http://localhost/flow-studio](http://localhost/flow-studio)
+- **หรือเปิดไฟล์โดยตรงในเครื่อง:** `file:///c:/laragon/www/flow-studio/index.html`
